@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1>Hello, {{ user.display_name }}</h1>
+  <p>Username: {{ user.username }}</p>
+  <p>Email: {{ user.email }}</p>
+  <p>Account type: {{ user.get_user_type_display }}</p>
+</div>
+{% endblock %}
