@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}My applications{% endblock %}
+{% block content %}
+<h1>My applications</h1>
+<div class="panel">
+  {% if applications %}
+    <table>
+      <tr><th>Job</th><th>Company</th><th>Applied on</th></tr>
+      {% for a in applications %}
+        <tr>
+          <td><a href="{% url 'job_detail' a.job.pk %}">{{ a.job.title }}</a></td>
+          <td>{{ a.job.company }}</td>
+          <td>{{ a.applied_at|date:"j M Y" }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>You haven't applied to any jobs yet. <a href="{% url 'job_search' %}">Find jobs</a></p>
+  {% endif %}
+</div>
+{% endblock %}

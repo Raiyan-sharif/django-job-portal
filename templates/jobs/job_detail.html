@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1>{{ job.title }}</h1>
+  <p class="muted">{{ job.company }} · {{ job.get_category_display }} · {{ job.number_of_openings }} opening{{ job.number_of_openings|pluralize }} · posted {{ job.created_at|date:"j M Y" }}</p>
+
+  <h3>Skills needed</h3>
+  {% if result %}
+    {% with r=result %}{% include 'includes/chips.html' %}{% endwith %}
+  {% else %}
+    <ul class="chips">{% for skill in job.skill_names %}<li class="chip">{{ skill }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  <h3>Job description</h3>
+  <p style="white-space: pre-line">{{ job.description }}</p>
+</div>
+
+{% if result %}
+  <div class="panel">
+    <h2>Your match</h2>
+    {% with r=result %}{% include 'includes/match.html' %}{% endwith %}
+    <p class="small muted">You have {{ result.matched|length }} of the required skills.</p>
+
+    {% if already_applied %}
+      <p><span class="badge">Applied</span> You have applied to this job.</p>
+    {% elif job.is_open %}
+      <h2>Apply for this job</h2>
+      <form method="post" action="{% url 'job_apply' job.pk %}">
+        {% csrf_token %}
+        {% for field in form %}
+          {% include 'includes/field.html' %}
+        {% endfor %}
+        <button class="btn" type="submit">Apply</button>
+      </form>
+    {% else %}
+      <p>This job is no longer accepting applications.</p>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

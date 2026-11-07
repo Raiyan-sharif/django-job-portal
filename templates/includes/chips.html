@@ -1,0 +1,4 @@
+<ul class="chips">
+  {% for skill in r.matched %}<li class="chip have">{{ skill }}</li>{% endfor %}
+  {% for skill in r.missing %}<li class="chip need">{{ skill }}</li>{% endfor %}
+</ul>

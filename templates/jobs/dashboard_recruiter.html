@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Skill matches{% endblock %}
+{% block content %}
+<h1>Candidates matched to your jobs</h1>
+<p class="muted">Job seekers ranked by how many of each job's required skills they have.</p>
+
+{% for row in rows %}
+  <div class="panel">
+    <h2 style="margin-top:0"><a href="{% url 'job_detail' row.job.pk %}">{{ row.job.title }}</a></h2>
+    <p class="muted small">{{ row.job.number_of_openings }} opening{{ row.job.number_of_openings|pluralize }} · {{ row.applicant_count }} applicant{{ row.applicant_count|pluralize }}</p>
+
+    {% for r in row.candidates %}
+      <div class="row">
+        <div>
+          <strong>{{ r.seeker.user.display_name }}</strong>
+          <span class="muted small">{{ r.seeker.headline }} · {{ r.seeker.experience_years }} yr experience · {{ r.seeker.user.email }}</span>
+          {% if r.applied %}<span class="badge">Applied</span>{% endif %}
+          {% include 'includes/chips.html' %}
+          {% if r.seeker.resume %}<p class="small" style="margin:.4rem 0 0"><a href="{{ r.seeker.resume.url }}" target="_blank">Open resume</a></p>{% endif %}
+        </div>
+        <div class="side">{% include 'includes/match.html' %}</div>
+      </div>
+    {% empty %}
+      <p>No job seekers share a skill with this job yet.</p>
+    {% endfor %}
+  </div>
+{% empty %}
+  <div class="panel">
+    <p>Post your first job to see matching candidates.</p>
+    <a class="btn" href="{% url 'job_create' %}">Post a job</a>
+  </div>
+{% endfor %}
+{% endblock %}

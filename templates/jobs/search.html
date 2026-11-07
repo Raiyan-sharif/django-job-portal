@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Find jobs{% endblock %}
+{% block content %}
+<h1>Find jobs</h1>
+<form method="get" class="search">
+  <input type="search" name="q" value="{{ query }}" placeholder="Title, company, skill or keyword">
+  <select name="category">
+    <option value="">All categories</option>
+    {% for value, label in categories %}
+      <option value="{{ value }}" {% if value == category %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit">Search</button>
+</form>
+
+<div class="panel">
+  <p class="muted small">{{ results|length }} job{{ results|length|pluralize }} found.</p>
+  {% for r in results %}
+    <div class="row">
+      <div>
+        <h3><a href="{% url 'job_detail' r.job.pk %}">{{ r.job.title }}</a></h3>
+        <div class="muted small">{{ r.job.company }} · {{ r.job.get_category_display }} · {{ r.job.number_of_openings }} opening{{ r.job.number_of_openings|pluralize }}</div>
+        {% if show_match %}
+          {% include 'includes/chips.html' %}
+        {% else %}
+          <ul class="chips">{% for skill in r.job.skill_names %}<li class="chip">{{ skill }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+      <div class="side">
+        {% if show_match %}{% include 'includes/match.html' %}{% endif %}
+        {% if r.applied %}
+          <span class="badge">Applied</span>
+        {% else %}
+          <a class="btn" href="{% url 'job_detail' r.job.pk %}">View{% if user.is_jobseeker %} and apply{% endif %}</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>No open jobs match that search. Try a different keyword or category.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Post a job{% endblock %}
+{% block content %}
+<div class="panel narrow">
+  <h1>Post a job</h1>
+  <p class="muted">The skill set decides which job seekers see this job as a match.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      {% include 'includes/field.html' %}
+    {% endfor %}
+    <button class="btn" type="submit">Post job</button>
+  </form>
+</div>
+{% endblock %}

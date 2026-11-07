@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Skill matches{% endblock %}
+{% block content %}
+<h1>Jobs that match your skills</h1>
+<p class="muted">Your skills:
+  {% for skill in profile.skill_names %}<span class="chip have">{{ skill }}</span> {% endfor %}
+  <a href="{% url 'profile' %}">Edit</a>
+</p>
+
+<div class="panel">
+  {% for r in matches %}
+    <div class="row">
+      <div>
+        <h3><a href="{% url 'job_detail' r.job.pk %}">{{ r.job.title }}</a></h3>
+        <div class="muted small">{{ r.job.company }} · {{ r.job.get_category_display }}</div>
+        {% include 'includes/chips.html' %}
+      </div>
+      <div class="side">
+        {% include 'includes/match.html' %}
+        {% if r.applied %}
+          <span class="badge">Applied</span>
+        {% else %}
+          <a class="btn" href="{% url 'job_detail' r.job.pk %}">View and apply</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>No open jobs share a skill with your profile yet. <a href="{% url 'profile' %}">Add more skills</a> or <a href="{% url 'job_search' %}">search all jobs</a>.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}My postings{% endblock %}
+{% block content %}
+<h1>My postings</h1>
+<div class="panel">
+  {% if jobs %}
+    <table>
+      <tr><th>Title</th><th>Category</th><th>Openings</th><th>Skills</th><th>Applicants</th></tr>
+      {% for job in jobs %}
+        <tr>
+          <td><a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a></td>
+          <td>{{ job.get_category_display }}</td>
+          <td>{{ job.number_of_openings }}</td>
+          <td>{{ job.skill_names|join:", " }}</td>
+          <td>{{ job.applications.all|length }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>You haven't posted any jobs yet.</p>
+  {% endif %}
+  <p style="margin-bottom:0"><a class="btn" href="{% url 'job_create' %}">Post a job</a></p>
+</div>
+{% endblock %}
